@@ -1,6 +1,6 @@
 use serde::{Deserialize, Serialize};
 
-use crate::auth::DiscordAccessToken;
+use crate::{auth::DiscordAccessToken, errors::Error};
 
 #[derive(Serialize, Deserialize, Debug, Clone)]
 pub struct InstructionRequest {
@@ -25,6 +25,11 @@ pub struct HistoryEntry {
 #[derive(Serialize, Deserialize, Debug, Clone)]
 pub struct InstructionResponse {
     pub content: Vec<String>,
+}
+
+#[derive(Serialize, Deserialize, Debug, Clone)]
+pub struct ErrorResponse {
+    pub error: Error,
 }
 
 type InstructionText = String;
