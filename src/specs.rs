@@ -28,6 +28,11 @@ pub struct InstructionResponse {
 }
 
 #[derive(Serialize, Deserialize, Debug, Clone)]
+pub struct InstructionChunk {
+    pub content: String,
+}
+
+#[derive(Serialize, Deserialize, Debug, Clone)]
 pub struct ErrorResponse {
     pub error: Error,
 }
