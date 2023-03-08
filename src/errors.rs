@@ -10,5 +10,6 @@ pub enum Error {
     UnableToDeserialize(String, String),
     ConfigError(String, String),
     UnableToLog(String),
+    ParsingError(String),
     NotImplemented,
 }
