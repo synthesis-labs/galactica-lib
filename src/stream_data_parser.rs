@@ -1,17 +1,12 @@
-use nom::branch::permutation;
 use nom::bytes::complete::{tag, take_until};
 use nom::character::complete::{multispace0, newline};
 use nom::combinator::opt;
-use nom::error::VerboseError;
-use nom::multi::{many0, many1};
+use nom::multi::many0;
 use nom::sequence::tuple;
-use nom::{Finish, IResult};
 
-use crate::errors::Error;
+use crate::parser::Parser;
 
-type Res<T, U> = IResult<T, U, VerboseError<T>>;
-
-fn single_data_record() -> impl Fn(&str) -> Res<&str, String> {
+fn single_data_record() -> impl Fn(&str) -> Parser<&str, String> {
     move |i| {
         tuple((tag("data:"), multispace0, take_until("\n"), newline))(i)
             .map(|(next, (_, _, value, _))| (next, value.to_string()))
@@ -20,11 +15,11 @@ fn single_data_record() -> impl Fn(&str) -> Res<&str, String> {
 
 // Weirdly we get the random ":\n" (blank record added to the stream)
 // usually right at the beginning...
-fn blank_data_record() -> impl Fn(&str) -> Res<&str, ()> {
+fn blank_data_record() -> impl Fn(&str) -> Parser<&str, ()> {
     move |i| tuple((tag(":"), newline))(i).map(|(next, _)| (next, ()))
 }
 
-pub fn stream_data_parser() -> impl Fn(&str) -> Res<&str, Vec<String>> {
+pub fn stream_data_parser() -> impl Fn(&str) -> Parser<&str, Vec<String>> {
     move |i| {
         tuple((
             opt(newline),
@@ -35,17 +30,10 @@ pub fn stream_data_parser() -> impl Fn(&str) -> Res<&str, Vec<String>> {
     }
 }
 
-// Parse the input, returning a complete data packet, and return how much was consumed
-// (so the cursor can be incremented)
-pub fn parse<T>(parser: impl Fn(&str) -> Res<&str, T>, input: &str) -> Result<(usize, T), Error> {
-    parser(input)
-        .finish()
-        .map(|(remaining, result)| (input.len() - remaining.len(), result))
-        .map_err(|e| Error::ParsingError(e.to_string()))
-}
-
 #[cfg(test)]
 mod tests {
+    use crate::parser::parse;
+
     use super::*;
 
     #[test]
