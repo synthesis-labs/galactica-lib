@@ -10,10 +10,10 @@ use crate::parser::Parser;
 
 #[derive(Debug)]
 pub struct Version {
-    arch_triple: String,
-    version: String,
-    build: String,
-    commit: String,
+    pub arch_triple: String,
+    pub version: String,
+    pub build: String,
+    pub commit: String,
 }
 
 pub fn valid_arch_name() -> impl Fn(&str) -> Parser<&str, String> {
