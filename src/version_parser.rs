@@ -1,7 +1,7 @@
 use nom::{
-    branch::{alt, permutation},
-    bytes::complete::{is_not, tag, take_until, take_until1},
-    character::complete::{alphanumeric1, anychar, digit1},
+    branch::alt,
+    bytes::complete::{tag, take_until, take_until1},
+    character::complete::digit1,
     combinator::opt,
     sequence::tuple,
 };
@@ -16,18 +16,18 @@ pub struct Version {
     commit: String,
 }
 
-fn valid_arch_name() -> impl Fn(&str) -> Parser<&str, String> {
+pub fn valid_arch_name() -> impl Fn(&str) -> Parser<&str, String> {
     move |i| tuple((take_until1("-"), tag("-")))(i).map(|(n, (a, _))| (n, a.to_string()))
 }
 
-fn arch_triple_parser() -> impl Fn(&str) -> Parser<&str, String> {
+pub fn arch_triple_parser() -> impl Fn(&str) -> Parser<&str, String> {
     // aarch64-apple-darwin
     move |i| {
         tuple((
             valid_arch_name(),
             valid_arch_name(),
             valid_arch_name(),
-            opt((valid_arch_name())),
+            opt(valid_arch_name()),
         ))(i)
         .map(|(n, (a, b, c, d))| {
             if let Some(d) = d {
@@ -39,14 +39,14 @@ fn arch_triple_parser() -> impl Fn(&str) -> Parser<&str, String> {
     }
 }
 
-fn version_parser() -> impl Fn(&str) -> Parser<&str, String> {
+pub fn version_parser() -> impl Fn(&str) -> Parser<&str, String> {
     move |i| {
         tuple((digit1, tag("."), digit1, tag("."), digit1))(i)
             .map(|(n, (a, _, b, _, c))| (n, format!("{}.{}.{}", a, b, c)))
     }
 }
 
-fn filename_parser() -> impl Fn(&str) -> Parser<&str, Version> {
+pub fn filename_parser() -> impl Fn(&str) -> Parser<&str, Version> {
     // galactica-aarch64-apple-darwin-0.1.0-build.17.014b5bf.tar.gz
     move |i| {
         tuple((
@@ -60,7 +60,7 @@ fn filename_parser() -> impl Fn(&str) -> Parser<&str, Version> {
             alt((tag(".tar.gz"), tag(".zip"))),
         ))(i)
         .map(
-            |(next, (_, arch_triple, version, _, build, _, commit, ext))| {
+            |(next, (_, arch_triple, version, _, build, _, commit, _ext))| {
                 (
                     next,
                     Version {
