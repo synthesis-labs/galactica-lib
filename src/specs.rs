@@ -52,4 +52,5 @@ pub enum Instruction {
     Conversation(InstructionText),
     ConversationWithReference(InstructionText, InstructionReference),
     RetoneEmailParagraph(EmailContent, SnippetStart, SnippetLength, Tone),
+    Do(InstructionText),
 }
