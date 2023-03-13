@@ -6,6 +6,6 @@ where
     REQ: Serialize + DeserializeOwned,
     RES: Serialize + DeserializeOwned,
 {
-    request: &'r REQ,
-    response: &'r RES,
+    pub request: &'r REQ,
+    pub response: &'r RES,
 }
