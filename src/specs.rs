@@ -54,3 +54,14 @@ pub enum Instruction {
     RetoneEmailParagraph(EmailContent, SnippetStart, SnippetLength, Tone),
     Do(InstructionText),
 }
+
+#[derive(Serialize, Deserialize, Debug, Clone)]
+pub struct UpdateRequest {
+    pub token: Option<DiscordAccessToken>,
+    pub current_version: String,
+}
+
+#[derive(Serialize, Deserialize, Debug, Clone)]
+pub struct UpdateResponse {
+    pub update_available: Option<String>,
+}
