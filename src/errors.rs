@@ -11,5 +11,6 @@ pub enum Error {
     ConfigError(String, String),
     UnableToLog(String),
     ParsingError(String),
+    GithubError(String),
     NotImplemented,
 }
