@@ -53,6 +53,7 @@ pub enum Instruction {
     ConversationWithReference(InstructionText, InstructionReference),
     RetoneEmailParagraph(EmailContent, SnippetStart, SnippetLength, Tone),
     Do(InstructionText),
+    Explain(InstructionText),
 }
 
 #[derive(Serialize, Deserialize, Debug, Clone)]
