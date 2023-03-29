@@ -54,6 +54,7 @@ pub enum Instruction {
     RetoneEmailParagraph(EmailContent, SnippetStart, SnippetLength, Tone),
     Do(InstructionText),
     Explain(InstructionText),
+    ExplainWithReference(InstructionText, InstructionReference),
 }
 
 #[derive(Serialize, Deserialize, Debug, Clone)]
