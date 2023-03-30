@@ -1,8 +1,8 @@
 use nom::branch::alt;
 use nom::bytes::complete::{tag, take_until};
-use nom::character::complete::{alpha1, multispace0, newline};
-use nom::combinator::{eof, not, opt, rest};
-use nom::multi::{many0, many1};
+use nom::character::complete::{multispace0, newline};
+use nom::combinator::{opt, rest};
+use nom::multi::many0;
 use nom::sequence::tuple;
 
 use crate::parser::Parser;
