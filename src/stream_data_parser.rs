@@ -15,8 +15,14 @@ pub enum StreamRecordType {
 
 fn single_data_record() -> impl Fn(&str) -> Parser<&str, String> {
     move |i| {
-        tuple((tag("data:"), multispace0, take_until("\n"), newline))(i)
-            .map(|(next, (_, _, value, _))| (next, value.to_string()))
+        tuple((
+            opt(newline),
+            tag("data:"),
+            multispace0,
+            take_until("\n"),
+            newline,
+        ))(i)
+        .map(|(next, (_, _, _, value, _))| (next, value.to_string()))
     }
 }
 
@@ -90,7 +96,7 @@ mod tests {
             parse(stream_data_or_error_parser(), input4)
         );
 
-        let input5 = "{bob}";
+        let input5 = "data: {\"some_json\":\"blah1\"}\n\ndata: {\"some_json\":\"blah2\"}\n\ndata: {\"some_json\":\"blah2\"}\n";
         println!(
             "Input5 => {:?}",
             parse(stream_data_or_error_parser(), input5)
