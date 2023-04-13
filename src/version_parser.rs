@@ -1,6 +1,6 @@
 use nom::{
     branch::alt,
-    bytes::complete::{tag, take_until, take_until1},
+    bytes::complete::{tag, take, take_until, take_until1},
     character::complete::digit1,
     combinator::opt,
     sequence::tuple,
@@ -56,22 +56,19 @@ pub fn filename_parser() -> impl Fn(&str) -> Parser<&str, Version> {
             tag("+build."),
             digit1,
             tag("."),
-            take_until("."),
-            alt((tag(".tar.gz"), tag(".zip"))),
+            take(7usize),
         ))(i)
-        .map(
-            |(next, (_, arch_triple, version, _, build, _, commit, _ext))| {
-                (
-                    next,
-                    Version {
-                        arch_triple,
-                        version,
-                        build: build.to_string(),
-                        commit: commit.to_string(),
-                    },
-                )
-            },
-        )
+        .map(|(next, (_, arch_triple, version, _, build, _, commit))| {
+            (
+                next,
+                Version {
+                    arch_triple,
+                    version,
+                    build: build.to_string(),
+                    commit: commit.to_string(),
+                },
+            )
+        })
     }
 }
 
@@ -91,5 +88,8 @@ mod tests {
 
         let input3 = "galactica-x86_64-pc-windows-gnu-0.1.0+build.17.014b5bf.zip";
         println!("Input3 => {:?}", parse(filename_parser(), input3));
+
+        let input4 = "galactica-x86_64-apple-darwin-0.1.0+build.92.c770688";
+        println!("Input4 => {:?}", parse(filename_parser(), input4));
     }
 }
