@@ -44,6 +44,9 @@ type EmailContent = String;
 type SnippetStart = usize;
 type SnippetLength = usize;
 type Tone = String;
+type InvocationName = String;
+type InvocationVariable = String;
+type InvocationReference = String;
 
 #[derive(Serialize, Deserialize, Debug, Clone)]
 pub enum Instruction {
@@ -55,6 +58,10 @@ pub enum Instruction {
     Do(InstructionText),
     Explain(InstructionText),
     ExplainWithReference(InstructionText, InstructionReference),
+
+    // New style invocation
+    //
+    Invoke(InvocationName, InvocationVariable, InvocationReference),
 }
 
 #[derive(Serialize, Deserialize, Debug, Clone)]
