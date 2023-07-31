@@ -12,6 +12,7 @@ pub struct DiscordAccessToken {
 #[derive(Serialize, Deserialize, Debug, Clone)]
 pub struct GetTokenRequest {
     pub code: String,
+    pub redirect_url: Option<String>,
 }
 
 #[derive(Serialize, Deserialize, Debug, Clone)]
